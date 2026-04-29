@@ -84,14 +84,22 @@ function createDb(pool) {
 async function initializeDatabase() {
     const pool = createPool();
     const db = createDb(pool);
-    const schema = fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8');
+    
+    // Skip automatic schema migration on Vercel to avoid timeouts and multi-statement issues with poolers.
+    if (!process.env.VERCEL) {
+        try {
+            const schema = fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8');
+            await db.exec(schema);
+        } catch (err) {
+            console.error('⚠️ Schema migration skipped or failed:', err.message);
+        }
+    }
 
-    await db.exec(schema);
     await db.get('SELECT 1');
-
-    console.log('Connected to PostgreSQL database.');
+    console.log('✅ Connected to PostgreSQL database.');
     return db;
 }
+
 
 module.exports = {
     createDb,
