@@ -20,11 +20,30 @@
       "dest": "server/index.js"
     },
     {
+      "src": "/providers(.*)",
+      "dest": "server/index.js"
+    },
+    {
+      "src": "/bookings(.*)",
+      "dest": "server/index.js"
+    },
+    {
+      "src": "/login",
+      "dest": "server/index.js",
+      "methods": ["POST"]
+    },
+    {
+      "src": "/register",
+      "dest": "server/index.js",
+      "methods": ["POST"]
+    },
+    {
       "handle": "filesystem"
     },
     {
-      "src": "/.*",
+      "src": "/(.*)",
       "dest": "client/index.html"
     }
   ]
 }
+
