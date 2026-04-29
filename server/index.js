@@ -113,6 +113,19 @@ const getDb = async () => {
 // Initial connection attempt (swallow error so server still starts)
 initDb().catch(() => {});
 
+// Middleware to ensure DB is connected before handling requests
+app.use(async (req, res, next) => {
+    if (req.path === '/api/health') return next(); // Skip for health check
+    try {
+        await initDb();
+        next();
+    } catch (err) {
+        console.error('Database middleware error:', err);
+        res.status(500).json({ message: 'Server initialization error. Please try again in a few seconds.' });
+    }
+});
+
+
 
 // ========== AUTH MIDDLEWARE ==========
 
