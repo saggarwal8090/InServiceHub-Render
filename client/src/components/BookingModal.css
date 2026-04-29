@@ -1,0 +1,194 @@
+.booking-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1100;
+    padding: 1rem;
+}
+
+.booking-modal {
+    background: white;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    animation: modalIn 0.3s ease-out;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+@keyframes modalIn {
+    from {
+        transform: translateY(20px) scale(0.97);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.2rem;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 0.8rem;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #1a1a2e;
+    font-size: 1.15rem;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #94a3b8;
+    padding: 0.3rem;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.close-btn:hover {
+    color: #1a1a2e;
+    background: #f1f5f9;
+}
+
+.provider-summary {
+    background: #f8fafc;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1.2rem;
+    font-size: 0.92rem;
+    border: 1px solid #e2e8f0;
+}
+
+.provider-summary p {
+    margin: 0.25rem 0;
+    color: #475569;
+}
+
+.form-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+    flex: 1;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    font-size: 0.88rem;
+    color: #475569;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.7rem 0.85rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.92rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    color: #1a1a2e;
+    background: #fafbfc;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #94a3b8;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    outline: none;
+    background: white;
+}
+
+.confirm-btn {
+    width: 100%;
+    padding: 0.85rem;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.confirm-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.confirm-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+.broadcast-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 0.35rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+}
+
+.broadcast-hint {
+    font-size: 0.84rem;
+    color: #64748b;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.booking-modal .error-msg {
+    background: linear-gradient(135deg, #fef2f2, #fee2e2);
+    color: #991b1b;
+    padding: 0.65rem 0.9rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    font-size: 0.88rem;
+    border: 1px solid #fecaca;
+    font-weight: 500;
+}
+
+@media (max-width: 480px) {
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .booking-modal {
+        padding: 1.5rem;
+    }
+}

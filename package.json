@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "@supabase/ssr": "^0.10.2",
+    "@supabase/supabase-js": "^2.105.1"
+  },
+  "scripts": {
+    "build": "npm run build --prefix client",
+    "start": "node server/index.js",
+    "server": "node server/index.js",
+    "client": "npm run dev --prefix client"
+  }
+}
+

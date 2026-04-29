@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Database
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+
+# Environment variables
+.env
+.env.local
+.env.production.local
+server/.env
+
+# Build outputs
+client/dist/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Docker volumes
+data/
+
+# Misc
+.cache/
+*.tgz
+.vercel

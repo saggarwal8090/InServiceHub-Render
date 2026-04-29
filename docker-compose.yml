@@ -1,0 +1,85 @@
+version: "3.9"
+
+services:
+  # ── PostgreSQL Database ──
+  postgres:
+    image: postgres:16-alpine
+    container_name: inservicehub_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: inservicehub
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./server/db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d inservicehub"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ── Node.js Express Server ──
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: inservicehub_server
+    restart: unless-stopped
+    ports:
+      - "5001:5001"
+    environment:
+      PORT: 5001
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_HOST: postgres
+      DB_NAME: inservicehub
+      DB_PORT: 5432
+      DB_SSL: "false"
+      JWT_SECRET: your_jwt_secret_change_in_prod
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ── FastAPI Service ──
+  fastapi:
+    build:
+      context: ./fastapi_service
+      dockerfile: Dockerfile
+    container_name: inservicehub_fastapi
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_HOST: postgres
+      DB_NAME: inservicehub
+      DB_PORT: 5432
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/inservicehub
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ── React Client (Dev) ──
+  client:
+    image: node:20-alpine
+    container_name: inservicehub_client
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    environment:
+      VITE_API_URL: http://localhost:5001/api
+      VITE_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+    depends_on:
+      - server
+
+volumes:
+  pgdata:
