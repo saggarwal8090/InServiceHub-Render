@@ -87,14 +87,32 @@ app.use(express.json({ limit: '10kb' }));
 
 let db;
 
+let dbInstance = null;
+
 async function initDb() {
-    db = await initializeDatabase();
+    if (dbInstance) return dbInstance;
+    try {
+        dbInstance = await initializeDatabase();
+        db = dbInstance; // Keep global 'db' updated for existing routes
+        return dbInstance;
+    } catch (err) {
+
+        console.error('❌ Failed to connect to database:', err);
+        // On Vercel, we don't want to process.exit(1) as it kills the function completely.
+        // We let the error bubble up to the route handlers.
+        throw err;
+    }
 }
 
-initDb().catch(err => {
-    console.error('Failed to connect to database:', err);
-    process.exit(1);
-});
+// Lazy-load DB in middleware or use a helper to get DB
+const getDb = async () => {
+    if (!dbInstance) await initDb();
+    return dbInstance;
+};
+
+// Initial connection attempt (swallow error so server still starts)
+initDb().catch(() => {});
+
 
 // ========== AUTH MIDDLEWARE ==========
 
