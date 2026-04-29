@@ -90,25 +90,31 @@ let db;
 let dbInstance = null;
 
 async function initDb() {
-    if (dbInstance) return dbInstance;
+    if (dbInstance) {
+        db = dbInstance; // Sync global db
+        return dbInstance;
+    }
     try {
+        console.log('🔄 Attempting to connect to database...');
         dbInstance = await initializeDatabase();
-        db = dbInstance; // Keep global 'db' updated for existing routes
+        db = dbInstance; // Sync global db
+        console.log('✅ Database connected successfully');
         return dbInstance;
     } catch (err) {
-
         console.error('❌ Failed to connect to database:', err);
-        // On Vercel, we don't want to process.exit(1) as it kills the function completely.
-        // We let the error bubble up to the route handlers.
+        dbInstance = null;
+        db = null;
         throw err;
     }
 }
 
 // Lazy-load DB in middleware or use a helper to get DB
 const getDb = async () => {
-    if (!dbInstance) await initDb();
-    return dbInstance;
+    await initDb();
+    if (!db) throw new Error('Database instance is not initialized');
+    return db;
 };
+
 
 // Initial connection attempt (swallow error so server still starts)
 initDb().catch(() => {});
